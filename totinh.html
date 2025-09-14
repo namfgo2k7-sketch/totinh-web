@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Điều anh luôn giấu kín trong tym</title>
+<style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --accent:#ff4d7e;
+      --muted:#b8c0cc;
+    }
+    *{box-sizing:border-box;font-family: Inter, Roboto, system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial;}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg) 0%, #071025 100%);color:#fff}
+    .wrap{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+
+    .card{
+      width:100%;
+      max-width:760px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      border-radius:16px;
+      padding:28px;
+      box-shadow: 0 10px 30px rgba(2,6,23,0.7);
+      display:grid;
+      grid-template-columns: 1fr 360px;
+      gap:20px;
+      align-items:center;
+      border:1px solid rgba(255,255,255,0.03);
+    }
+
+    /* Left: message area */
+    .left{
+      padding:12px;
+    }
+    .title{
+      font-size:22px;
+      font-weight:700;
+      letter-spacing:0.2px;
+      margin:0 0 8px 0;
+      color: #fff;
+    }
+    .subtitle{
+      margin:0 0 18px 0;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .message{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      padding:16px;
+      border-radius:12px;
+      min-height:140px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      color:#ffeef4;
+      font-size:18px;
+      line-height:1.45;
+      transition:all 0.35s ease;
+    }
+
+    .message.hidden{
+      filter:blur(6px) grayscale(.4);
+      transform:scale(.995);
+      color:transparent;
+    }
+
+    .actions{
+      margin-top:14px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    button{
+      border:0;
+      padding:10px 14px;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:600;
+      font-size:14px;
+      transition:transform .12s ease, box-shadow .12s ease;
+    }
+    button:active{transform:translateY(1px)}
+    .btn-primary{
+      background: linear-gradient(90deg,var(--accent), #ff7aa0);
+      color:white;
+      box-shadow: 0 6px 18px rgba(255,77,126,0.18);
+    }
+    .btn-ghost{
+      background:transparent;
+      color:var(--muted);
+      border:1px solid rgba(255,255,255,0.04);
+    }
+
+    /* Right: heart area */
+    .right{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:8px;
+      position:relative;
+    }
+
+    .heart-wrap{
+      width:260px;
+      height:260px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+    }
+
+    /* heart animation */
+    .heart{
+      width:160px;
+      height:160px;
+      transform-origin:center;
+      animation: pulse 1.6s ease-in-out infinite;
+      filter:drop-shadow(0 12px 24px rgba(255,77,126,0.12));
+    }
+
+    @keyframes pulse{
+      0%{transform:scale(1)}
+      50%{transform:scale(1.08)}
+      100%{transform:scale(1)}
+    }
+
+    /* confetti pieces (simple) */
+    .confetti{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+    }
+    .confetti i{
+      position:absolute;
+      width:10px;height:10px;
+      background:var(--accent);
+      opacity:0;
+      transform:translateY(-20px) rotate(0deg) scale(.8);
+      animation:drop 1.4s cubic-bezier(.2,.9,.2,1) forwards;
+    }
+    @keyframes drop{
+      to{opacity:1; transform:translateY(220px) rotate(420deg) scale(1)}
+    }
+
+    /* footer small */
+    .note{
+      margin-top:12px;
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    /* responsive */
+    @media (max-width:820px){
+      .card{grid-template-columns:1fr; padding:18px;}
+      .right{order:-1;margin-bottom:8px;}
+      .heart-wrap{width:200px;height:200px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" role="main" aria-labelledby="pageTitle">
+      <div class="left">
+        <h1 id="pageTitle" class="title">Một lần thành thật</h1>
+        <p class="subtitle">Nhấn nút để biết điều anh luôn giấu kin.</p>
+
+        <div id="message" class="message hidden" aria-live="polite">
+          <!-- Mặc định lời tỏ tình, bạn có thể sửa ngay trong HTML hoặc bằng form bên dưới -->
+          Ừm thì ở đây t chỉ muốn nói là t đã đem lòng này yêu m 1 thời gian rồi những ngày qua bên m rất t luôn cảm thấy rất vui 
+         T muốn nói là: "I love u, can you be my girlfriend?""
+         Nếu đồng ý hãy viết lại lên lời tỏ tình này và gửi lại cho t nhé <3
+        </div>
+
+        <div class="actions" aria-hidden="false">
+          <button id="openBtn" class="btn-primary" aria-controls="message">Coi bí mật ❤️</button>
+          <button id="customBtn" class="btn-ghost">Trả lời</button>
+        </div>
+
+        <div class="note" id="note">Gợi ý: bấm "Trả lời" để chỉnh sửa</div>
+      </div>
+
+      <div class="right" aria-hidden="false">
+        <div class="heart-wrap" role="img" aria-label="Trái tim">
+          <!-- SVG trái tim -->
+          <svg class="heart" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0" stop-color="#ff6b8a"/>
+                <stop offset="1" stop-color="#ff3d6e"/>
+              </linearGradient>
+            </defs>
+            <path d="M12 21s-7-4.35-9.2-7.06C.91 10.44 4.18 6 8.8 6c2.26 0 3.9 1.1 3.9 1.1S14.94 6 17.2 6C21.82 6 25.09 10.44 21.2 13.94 19 16.65 12 21 12 21z"
+              fill="url(#g)" stroke="rgba(255,255,255,0.06)" stroke-width="0.6"></path>
+          </svg>
+
+          <!-- confetti container -->
+          <div class="confetti" id="confetti"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- small modal-like UI for customizing text -->
+  <div id="editorModal" style="display:none;position:fixed;inset:0;background:rgba(2,6,23,0.6);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px;">
+    <div style="width:100%;max-width:680px;background:#071022;padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 18px 50px rgba(2,6,23,0.7);">
+      <h3 style="margin:0 0 10px 0;color:#fff">Tùy chỉnh lời tỏ tình</h3>
+      <textarea id="customText" style="width:100%;height:160px;padding:12px;border-radius:8px;background:#06101a;color:#fff;border:1px solid rgba(255,255,255,0.03);resize:vertical" spellcheck="true">Xin chào, mình biết nói ra điều này hơi ngại...  
+Nhưng từ lúc gặp bạn, mình nhận ra bạn là người khiến mình muốn trở thành phiên bản tốt hơn mỗi ngày.  
+Mình thích bạn — thật lòng, và mình muốn cùng bạn thử khám phá điều này nếu bạn cũng cảm thấy vậy.</textarea>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:12px;">
+        <button id="cancelEdit" class="btn-ghost">Hủy</button>
+        <button id="saveEdit" class="btn-primary">Lưu & xem</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // -- Tùy chỉnh nội dung nhanh --
+    const messageEl = document.getElementById('message');
+    const openBtn = document.getElementById('openBtn');
+    const copyBtn = document.getElementById('copyBtn');
+    const customBtn = document.getElementById('customBtn');
+    const confettiContainer = document.getElementById('confetti');
+    const editorModal = document.getElementById('editorModal');
+    const customText = document.getElementById('customText');
+    const cancelEdit = document.getElementById('cancelEdit');
+    const saveEdit = document.getElementById('saveEdit');
+
+    let revealed = false;
+
+    function makeConfetti(n=18){
+      confettiContainer.innerHTML = '';
+      const colors = ['#ff6b8a','#ff3d6e','#ffd166','#ff8fab','#9be7ff','#b8ffd1'];
+      for(let i=0;i<n;i++){
+        const el = document.createElement('i');
+        el.style.left = Math.random()*100 + '%';
+        el.style.top = Math.random()*20 + '%';
+        el.style.background = colors[i % colors.length];
+        el.style.animationDelay = (Math.random()*0.35) + 's';
+        el.style.transform = 'translateY(-40px) rotate(' + (Math.random()*120) + 'deg)';
+        el.style.width = (6 + Math.random()*10) + 'px';
+        el.style.height = (6 + Math.random()*10) + 'px';
+        confettiContainer.appendChild(el);
+      }
+      // remove after some time
+      setTimeout(()=> confettiContainer.innerHTML = '', 2000);
+    }
+
+    openBtn.addEventListener('click', ()=>{
+      revealed = !revealed;
+      if(revealed){
+        messageEl.classList.remove('hidden');
+        openBtn.textContent = 'Đóng lại';
+        makeConfetti(20);
+      } else {
+        messageEl.classList.add('hidden');
+        openBtn.textContent = 'Mở lời ❤️';
+      }
+    });
+
+    copyBtn.addEventListener('click', async ()=>{
+      const text = messageEl.textContent.trim();
+      try {
+        await navigator.clipboard.writeText(text);
+        copyBtn.textContent = 'Đã sao chép ✓';
+        setTimeout(()=> copyBtn.textContent = 'Sao chép lời tỏ tình', 1600);
+      } catch(e){
+        // fallback
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        try{ document.execCommand('copy'); copyBtn.textContent = 'Đã sao chép ✓'; }
+        catch(e){ copyBtn.textContent = 'Không thể sao chép'; }
+        ta.remove();
+        setTimeout(()=> copyBtn.textContent = 'Sao chép lời tỏ tình', 1600);
+      }
+    });
+
+    customBtn.addEventListener('click', ()=>{
+      editorModal.style.display = 'flex';
+      customText.value = messageEl.textContent.trim();
+    });
+    cancelEdit.addEventListener('click', ()=> editorModal.style.display='none');
+    saveEdit.addEventListener('click', ()=>{
+      const val = customText.value.trim();
+      if(val.length===0) return;
+      messageEl.textContent = val;
+      editorModal.style.display='none';
+      // if currently hidden, reveal to preview
+      if(!revealed){ openBtn.click(); }
+    });
+
+    // Allow Enter to submit in modal (Ctrl+Enter)
+    customText.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter' && (e.ctrlKey || e.metaKey)){
+        e.preventDefault();
+        saveEdit.click();
+      }
+    });
+
+    // accessibility: toggle via keyboard shortcut "T" to open/close (optional)
+    document.addEventListener('keydown', (e)=>{
+      if(e.key.toLowerCase() === 't' && (e.target === document.body || e.target === document.documentElement)){
+        openBtn.click();
+      }
+      if(e.key === 'Escape' && editorModal.style.display === 'flex'){ editorModal.style.display='none'; }
+    });
+  </script>
+</body>
+</html>
